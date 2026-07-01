@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>あなたの美容の起点診断 | AXIS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:#F7F3EE;--warm:#FDFAF7;--charcoal:#1C1C1A;--mid:#5A5750;--light:#9A9590;
+  --accent:#C4956A;--accent-light:#E8D5C0;
+  --structure:#4A6741;--skin:#C4956A;--muscle:#6B5B8A;--hormone:#A84545;
+  --border:rgba(28,28,26,0.12);
+  --sans:'Noto Sans JP',sans-serif;--serif:'Cormorant Garamond',serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--cream);color:var(--charcoal);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:72px 24px 60px;position:relative;overflow:hidden}
+#hero::before{content:'';position:absolute;top:-15%;right:-15%;width:70vw;height:70vw;border-radius:50%;background:radial-gradient(circle,rgba(196,149,106,.14) 0%,transparent 70%);pointer-events:none}
+#hero::after{content:'';position:absolute;bottom:-10%;left:-10%;width:50vw;height:50vw;border-radius:50%;background:radial-gradient(circle,rgba(74,103,65,.09) 0%,transparent 70%);pointer-events:none}
+.logo{font-family:var(--serif);font-size:14px;letter-spacing:.4em;color:var(--light);text-transform:uppercase;margin-bottom:56px;opacity:0;animation:fadeUp .8s ease .2s forwards}
+.hero-eyebrow{font-family:var(--sans);font-size:11px;font-weight:300;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fadeUp .8s ease .4s forwards}
+.hero-title{font-family:var(--serif);font-size:clamp(36px,9vw,64px);font-weight:300;line-height:1.2;text-align:center;margin-bottom:10px;opacity:0;animation:fadeUp .8s ease .5s forwards}
+.hero-title em{font-style:italic;color:var(--accent)}
+.hero-sub{font-family:var(--sans);font-size:14px;font-weight:300;line-height:2;text-align:center;color:var(--mid);max-width:340px;margin:20px auto 36px;opacity:0;animation:fadeUp .8s ease .65s forwards}
+.hero-insight{background:var(--warm);border:1px solid var(--border);border-radius:16px;padding:24px 28px;max-width:380px;width:100%;margin-bottom:44px;opacity:0;animation:fadeUp .8s ease .8s forwards}
+.hero-insight-label{font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px}
+.hero-insight p{font-size:13px;font-weight:300;line-height:1.85;color:var(--mid);padding-left:14px;border-left:2px solid var(--accent-light);margin-bottom:10px}
+.hero-insight p:last-child{margin-bottom:0}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--charcoal);color:var(--cream);font-family:var(--sans);font-size:14px;font-weight:400;letter-spacing:.08em;padding:18px 40px;border-radius:100px;border:none;cursor:pointer;text-decoration:none;transition:all .3s ease;opacity:0;animation:fadeUp .8s ease .95s forwards;min-height:56px}
+.btn-primary:active{transform:scale(.97)}
+.hero-note{font-family:var(--sans);font-size:11px;font-weight:300;color:var(--light);margin-top:14px;letter-spacing:.05em;opacity:0;animation:fadeUp .8s ease 1.1s forwards}
+#quiz{display:none;min-height:100vh;padding:52px 20px 60px;background:var(--warm)}
+#quiz.active{display:block}
+.quiz-inner{max-width:480px;margin:0 auto}
+.quiz-progress{display:flex;align-items:center;gap:12px;margin-bottom:40px}
+.progress-bar{flex:1;height:2px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease}
+.progress-text{font-family:var(--sans);font-size:11px;font-weight:300;color:var(--light);letter-spacing:.1em;white-space:nowrap}
+.question-wrap{display:none;animation:fadeUp .4s ease forwards}
+.question-wrap.active{display:block}
+.question-num{font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:.25em;color:var(--accent);text-transform:uppercase;margin-bottom:14px}
+.question-text{font-family:var(--serif);font-size:clamp(22px,5.5vw,28px);font-weight:400;line-height:1.55;margin-bottom:8px}
+.question-hint{font-family:var(--sans);font-size:12px;font-weight:300;color:var(--light);margin-bottom:24px;line-height:1.7}
+.options{display:flex;flex-direction:column;gap:10px}
+.option{display:flex;align-items:flex-start;gap:14px;padding:20px;background:var(--cream);border:1px solid var(--border);border-radius:14px;cursor:pointer;transition:all .2s ease;text-align:left;min-height:64px}
+.option:active{transform:scale(.98)}
+.option.selected{border-color:var(--charcoal);background:var(--charcoal)}
+.option-label{font-family:var(--serif);font-size:12px;letter-spacing:.18em;color:var(--accent);flex-shrink:0;margin-top:2px;transition:color .2s;min-width:16px}
+.option.selected .option-label{color:var(--accent-light)}
+.option-text{font-family:var(--sans);font-size:14px;font-weight:300;line-height:1.75;color:var(--charcoal);transition:color .2s}
+.option.selected .option-text{color:var(--cream)}
+.quiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:28px}
+.btn-back{font-family:var(--sans);font-size:13px;font-weight:300;color:var(--light);background:none;border:none;cursor:pointer;letter-spacing:.06em;padding:12px 0;min-height:44px}
+.btn-next{font-family:var(--sans);font-size:14px;font-weight:400;letter-spacing:.08em;padding:16px 36px;min-height:52px;background:var(--charcoal);color:var(--cream);border:none;border-radius:100px;cursor:pointer;transition:all .25s ease;opacity:.3;pointer-events:none}
+.btn-next.enabled{opacity:1;pointer-events:auto}
+.btn-next.enabled:active{transform:scale(.97)}
+#result{display:none;min-height:100vh;padding:72px 20px 60px}
+#result.active{display:block}
+.result-inner{max-width:480px;margin:0 auto}
+.result-eyebrow{font-family:var(--sans);font-size:10px;font-weight:300;letter-spacing:.22em;color:var(--light);text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fadeUp .6s ease .1s forwards}
+.result-type-label{font-family:var(--serif);font-size:clamp(32px,8vw,52px);font-weight:300;line-height:1.1;margin-bottom:4px;opacity:0;animation:fadeUp .6s ease .25s forwards}
+.result-type-en{font-family:var(--serif);font-size:13px;font-weight:400;letter-spacing:.28em;text-transform:uppercase;margin-bottom:28px;opacity:0;animation:fadeUp .6s ease .35s forwards}
+.result-card{border-radius:20px;padding:28px 24px;margin-bottom:14px;opacity:0;animation:fadeUp .6s ease .45s forwards}
+.result-desc{font-family:var(--sans);font-size:14px;font-weight:300;line-height:2;margin-bottom:22px}
+.result-hidden-insight{border-top:1px solid rgba(28,28,26,.12);padding-top:18px;margin-bottom:18px}
+.rhi-label{font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px;opacity:.7}
+.rhi-text{font-family:var(--sans);font-size:13px;font-weight:300;line-height:1.9;font-style:italic}
+.result-check{background:rgba(255,255,255,.5);border-radius:12px;padding:18px 20px}
+.result-check-label{font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--light);margin-bottom:12px}
+.check-item{display:flex;gap:10px;margin-bottom:10px;font-family:var(--sans);font-size:13px;font-weight:300;line-height:1.7;color:var(--mid)}
+.check-item:last-child{margin-bottom:0}
+.check-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:8px}
+.result-next{background:var(--warm);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;opacity:0;animation:fadeUp .6s ease .6s forwards}
+.result-next-title{font-family:var(--serif);font-size:20px;font-weight:400;line-height:1.5;margin-bottom:10px}
+.result-next-text{font-family:var(--sans);font-size:13px;font-weight:300;line-height:1.9;color:var(--mid);margin-bottom:18px}
+.form-group{display:flex;flex-direction:column;gap:10px}
+.form-input{width:100%;padding:16px 20px;min-height:52px;background:var(--cream);border:1px solid var(--border);border-radius:100px;font-family:var(--sans);font-size:14px;color:var(--charcoal);outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--accent)}
+.form-input::placeholder{color:var(--light)}
+.btn-register{width:100%;padding:16px;min-height:52px;background:var(--charcoal);color:var(--cream);font-family:var(--sans);font-size:14px;font-weight:400;letter-spacing:.08em;border:none;border-radius:100px;cursor:pointer;transition:all .25s ease}
+.btn-register:active{transform:scale(.97)}
+.result-share{opacity:0;animation:fadeUp .6s ease .75s forwards}
+.share-label{font-family:var(--sans);font-size:10px;font-weight:300;letter-spacing:.18em;color:var(--light);text-transform:uppercase;margin-bottom:10px}
+.share-text{background:var(--warm);border:1px solid var(--border);border-radius:12px;padding:16px 18px;font-family:var(--sans);font-size:13px;font-weight:300;line-height:1.85;color:var(--mid);margin-bottom:10px}
+.btn-copy{font-family:var(--sans);font-size:12px;font-weight:300;color:var(--accent);background:none;border:1px solid var(--accent);border-radius:100px;padding:10px 24px;min-height:44px;cursor:pointer;transition:all .2s}
+.btn-copy:active{background:var(--accent);color:var(--cream)}
+#registered{display:none;text-align:center;padding:80px 24px;min-height:100vh;align-items:center;justify-content:center;flex-direction:column}
+#registered.active{display:flex}
+.registered-icon{font-size:48px;margin-bottom:24px}
+.registered-title{font-family:var(--serif);font-size:32px;font-weight:300;margin-bottom:16px}
+.registered-text{font-family:var(--sans);font-size:14px;font-weight:300;line-height:2;color:var(--mid);max-width:320px}
+.type-structure .result-type-label,.type-structure .result-type-en{color:var(--structure)}
+.type-structure .result-card{background:#EFF4EE;color:#2D4229}
+.type-skin .result-type-label,.type-skin .result-type-en{color:var(--skin)}
+.type-skin .result-card{background:#F9F0E8;color:#5C3A1A}
+.type-muscle .result-type-label,.type-muscle .result-type-en{color:var(--muscle)}
+.type-muscle .result-card{background:#F0EEF5;color:#352947}
+.type-hormone .result-type-label,.type-hormone .result-type-en{color:var(--hormone)}
+.type-hormone .result-card{background:#F5EEEE;color:#4A1E1E}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<section id="hero">
+  <div class="logo">AXIS</div>
+  <div class="hero-eyebrow">Body Shape Diagnosis</div>
+  <h1 class="hero-title">運動しているのに、なぜ<br><em>理想のプロポーションに届かないのか。</em></h1>
+  <p class="hero-sub">ボディメイクの悩みには「起点」があります。筋トレの問題だと思っていたことが、実は骨格の歪みやホルモン変化から来ていることも。まず、あなたの起点を知ることが、最も効率のいい一手です。</p>
+  <div class="hero-insight">
+    <div class="hero-insight-label">こんな経験はありませんか</div>
+    <p>運動を続けているのに、体型が思うように変わらない</p><p>トレーナーに言われた通りにやっているのに効果が出ない</p><p>体重は変わっていないのに、シルエットが崩れてきた気がする</p>
+  </div>
+  <a href="#" class="btn-primary" onclick="startQuiz();return false;">
+    無料で診断する（約3分）
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <p class="hero-note">登録不要・無料・3分で完了</p>
+</section>
+
+<section id="quiz">
+  <div class="quiz-inner">
+    <div class="quiz-progress">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-text" id="progressText">1 / 7</div>
+    </div>
+    
+    <div class="question-wrap active" data-q="0">
+      <div class="question-num">Question 01</div>
+      <p class="question-text">体型について
+一番気になっていることは？</p>
+      <p class="question-hint">直感で選んでください。</p>
+      <div class="options">
+        <div class="option" data-scores='{"muscle": 2, "hormone": 1}' onclick="selectOption(this)">
+          <span class="option-label">A</span>
+          <span class="option-text">お腹や腰回りのたるみ、全体的なシルエットの変化</span>
+        </div>
+        <div class="option" data-scores='{"structure": 3}' onclick="selectOption(this)">
+          <span class="option-label">B</span>
+          <span class="option-text">猫背や骨盤の傾き、左右のバランスの崩れ</span>
+        </div>
+        <div class="option" data-scores='{"muscle": 2, "hormone": 1}' onclick="selectOption(this)">
+          <span class="option-label">C</span>
+          <span class="option-text">筋肉がつきにくくなった、以前より疲れやすい</span>
+        </div>
+        <div class="option" data-scores='{"hormone": 2}' onclick="selectOption(this)">
+          <span class="option-label">D</span>
+          <span class="option-text">むくみやすい、体の重さ、体質が変わった気がする</span>
+        </div>
+      </div>
+    </div>
+    <div class="question-wrap " data-q="1">
+      <div class="question-num">Question 02</div>
+      <p class="question-text">運動はどのくらい続けていますか？</p>
+      <p class="question-hint">現在のペースを選んでください。</p>
+      <div class="options">
+        <div class="option" data-scores='{"structure": 2, "muscle": 1}' onclick="selectOption(this)">
+          <span class="option-label">A</span>
+          <span class="option-text">週2回以上続けているが、体型の変化が感じられない</span>
+        </div>
+        <div class="option" data-scores='{"structure": 3}' onclick="selectOption(this)">
+          <span class="option-label">B</span>
+          <span class="option-text">運動しているが、左右差や姿勢の崩れが気になる</span>
+        </div>
+        <div class="option" data-scores='{"hormone": 2, "muscle": 1}' onclick="selectOption(this)">
+          <span class="option-label">C</span>
+          <span class="option-text">運動量は変えていないのに、以前より結果が出にくくなってきた</span>
+        </div>
+        <div class="option" data-scores='{"hormone": 2}' onclick="selectOption(this)">
+          <span class="option-label">D</span>
+          <span class="option-text">運動が続かない。体が重い、やる気が出ない</span>
+        </div>
+      </div>
+    </div>
+    <div class="question-wrap " data-q="2">
+      <div class="question-num">Question 03</div>
+      <p class="question-text">横から自分の姿を見たとき、
+気になることはありますか？</p>
+      <p class="question-hint">姿見やショーウィンドウで確認してみてください。</p>
+      <div class="options">
+        <div class="option" data-scores='{"structure": 3}' onclick="selectOption(this)">
+          <span class="option-label">A</span>
+          <span class="option-text">首が前に出ている、背中が丸まっている</span>
+        </div>
+        <div class="option" data-scores='{"structure": 2, "muscle": 1}' onclick="selectOption(this)">
+          <span class="option-label">B</span>
+          <span class="option-text">お腹だけ前に出ている、腰が反りすぎている気がする</span>
+        </div>
+        <div class="option" data-scores='{"muscle": 2}' onclick="selectOption(this)">
+          <span class="option-label">C</span>
+          <span class="option-text">全体的にたるんできた、以前とシルエットが違う</span>
+        </div>
+        <div class="option" data-scores='{"hormone": 1, "muscle": 1}' onclick="selectOption(this)">
+          <span class="option-label">D</span>
+          <span class="option-text">特に気にならないが、なんとなく体が変わった気はする</span>
+        </div>
+      </div>
+    </div>
+    <div class="question-wrap " data-q="3">
+      <div class="question-num">Question 04</div>
+      <p class="question-text">体の左右差について
+どう感じていますか？</p>
+      
+      <div class="options">
+        <div class="option" data-scores='{"structure": 3}' onclick="selectOption(this)">
+          <span class="option-label">A</span>
+          <span class="option-text">写真を見ると肩の高さや腰の位置が左右で違う気がする</span>
+        </div>
+        <div class="option" data-scores='{"structure": 1, "muscle": 2}' onclick="selectOption(this)">
+          <span class="option-label">B</span>
+          <span class="option-text">利き手側と反対側で筋肉のつき方が違う</span>
+        </div>
+        <div class="option" data-scores='{"muscle": 1, "hormone": 1}' onclick="selectOption(this)">
+          <span class="option-label">C</span>
+          <span class="option-text">特に左右差は感じていない。全体的に変化している</span>
+        </div>
+        <div class="option" data-scores='{"skin": 1, "hormone": 1}' onclick="selectOption(this)">
+          <span class="option-label">D</span>
+          <span class="option-text">気にしたことがなかった</span>
+        </div>
+      </div>
+    </div>
+    <div class="question-wrap " data-q="4">
+      <div class="question-num">Question 05</div>
+      <p class="question-text">最近、体の「内側」の変化を
+感じますか？</p>
+      
+      <div class="options">
+        <div class="option" data-scores='{"hormone": 2, "muscle": 1}' onclick="selectOption(this)">
+          <span class="option-label">A</span>
+          <span class="option-text">体重は変わっていないのに筋肉が落ちて脂肪が増えた気がする</span>
+        </div>
+        <div class="option" data-scores='{"hormone": 3}' onclick="selectOption(this)">
+          <span class="option-label">B</span>
+          <span class="option-text">同じ食事・運動でも以前と違う体の変化を感じる</span>
+        </div>
+        <div class="option" data-scores='{"hormone": 2}' onclick="selectOption(this)">
+          <span class="option-label">C</span>
+          <span class="option-text">疲れが取れにくい、体力が落ちてきた</span>
+        </div>
+        <div class="option" data-scores='{"structure": 1, "muscle": 1}' onclick="selectOption(this)">
+          <span class="option-label">D</span>
+          <span class="option-text">内側の変化より、体型や姿勢の変化の方が気になる</span>
+        </div>
+      </div>
+    </div>
+    <div class="question-wrap " data-q="5">
+      <div class="question-num">Question 06</div>
+      <p class="question-text">ボディメイクで
+これまで一番試してきたことは？</p>
+      
+      <div class="options">
+        <div class="option" data-scores='{"muscle": 2}' onclick="selectOption(this)">
+          <span class="option-label">A</span>
+          <span class="option-text">筋トレ、ウォーキング、ランニングなどの運動</span>
+        </div>
+        <div class="option" data-scores='{"muscle": 1, "hormone": 1}' onclick="selectOption(this)">
+          <span class="option-label">B</span>
+          <span class="option-text">食事管理、カロリー制限、プロテイン</span>
+        </div>
+        <div class="option" data-scores='{"structure": 2}' onclick="selectOption(this)">
+          <span class="option-label">C</span>
+          <span class="option-text">ヨガ、ピラティス、整体などの姿勢・軸のケア</span>
+        </div>
+        <div class="option" data-scores='{"hormone": 2}' onclick="selectOption(this)">
+          <span class="option-label">D</span>
+          <span class="option-text">サプリメント、睡眠改善、ホルモン系のケア</span>
+        </div>
+      </div>
+    </div>
+    <div class="question-wrap " data-q="6">
+      <div class="question-num">Question 07</div>
+      <p class="question-text">理想のプロポーションに近づくために
+一番解決したいことは？</p>
+      
+      <div class="options">
+        <div class="option" data-scores='{"structure": 2}' onclick="selectOption(this)">
+          <span class="option-label">A</span>
+          <span class="option-text">骨盤・背骨の歪みを整えて、正しい体の軸を作りたい</span>
+        </div>
+        <div class="option" data-scores='{"muscle": 2}' onclick="selectOption(this)">
+          <span class="option-label">B</span>
+          <span class="option-text">筋肉を効率よくつけて、引き締まったシルエットにしたい</span>
+        </div>
+        <div class="option" data-scores='{"hormone": 2}' onclick="selectOption(this)">
+          <span class="option-label">C</span>
+          <span class="option-text">年齢に合った運動・食事のアプローチを知りたい</span>
+        </div>
+        <div class="option" data-scores='{"skin": 1, "hormone": 1}' onclick="selectOption(this)">
+          <span class="option-label">D</span>
+          <span class="option-text">肌のハリやツヤも含めた、全体的な若々しさを保ちたい</span>
+        </div>
+      </div>
+    </div>
+    <div class="quiz-nav">
+      <button class="btn-back" id="backBtn" onclick="prevQuestion()" style="visibility:hidden">← 前の質問</button>
+      <button class="btn-next" id="nextBtn" onclick="nextQuestion()">次へ</button>
+    </div>
+  </div>
+</section>
+
+<section id="result">
+  <div class="result-inner" id="resultInner"></div>
+</section>
+
+<section id="registered">
+  <div class="registered-icon">✦</div>
+  <h2 class="registered-title">ご登録ありがとうございます</h2>
+  <p class="registered-text">あなただけの個別診断の準備ができましたら、ご連絡いたします。信頼できる次の一手を、一緒に考えましょう。</p>
+</section>
+
+<script>
+const TOTAL_Q = 7;
+const SHARE_TAG = '運動しても変わらない理由が、ここにありました。
+#AXIS_起点診断 #ボディメイクの起点';
+const types = {
+  structure:{label:'骨格起点タイプ',en:'Structure Type',className:'type-structure',desc:'外見の変化の多くが「骨格・姿勢・体の軸」から来ているタイプです。どれだけスキンケアや運動に投資しても効果が出にくいと感じているなら、骨格の歪みや重心のズレが先に影響している可能性があります。首が前に出た状態（ストレートネック）や骨盤の傾きは、顔のたるみ・体のシルエット・肩こりまで連鎖的に影響します。土台を整えることが、最も効率のいい一手です。',hidden:'頭の重さは約5kg。首が前に出るほど首・肩への負担が倍増し、それが顔のたるみやフェイスラインにも直結します。姿勢が変わると、見た目年齢が5歳以上変わると言われています。',checks:['横から見たとき、耳の位置が肩より前に出ていませんか？','左右の肩の高さが違う、または写真で顔や体が傾いていることがありますか？','骨格・姿勢を整えることで、スキンケアや運動の効果が出やすくなります'],next:'カイロプラクティック・ピラティス・理学療法士など、骨格・姿勢の専門家への相談を最初のステップにすることをお勧めします。'},
+  skin:{label:'皮膚起点タイプ',en:'Skin Type',className:'type-skin',desc:'外見の変化の中心が「肌そのもの」にあるタイプです。情報は多く持っているけれど、何が本当に自分の肌に合うのか判断できないというもどかしさを感じていませんか。市販品と医療品では有効成分の濃度や規制が異なります。自分の肌タイプを正確に把握した上で優先順位をつけることが、最も効率のいいアプローチです。',hidden:'肌のたるみには「皮膚自体の問題」と「骨格・筋肉の問題」の2種類があります。毛穴の開きが続く場合は紫外線ダメージや保湿バランスだけでなく、ホルモン変化との関係も視野に入れると対処の幅が広がります。',checks:['乾燥しているときと油っぽいときで、同じケアを続けていませんか？','使っているスキンケアの有効成分が、自分の悩みに対応しているか確認したことがありますか？','美容皮膚科での肌診断を一度受けると、試行錯誤の期間を大幅に短縮できます'],next:'美容皮膚科での肌診断を起点に、日常ケアを組み立てるアプローチが最も効率的です。'},
+  muscle:{label:'筋肉起点タイプ',en:'Muscle Type',className:'type-muscle',desc:'外見の変化の多くが「筋力低下・体組成の変化」から来ているタイプです。以前と同じケアや運動をしているのに結果が出にくくなってきたなら、年齢によるホルモン変化と筋肉の関係を理解した上でのアプローチが必要です。顔のたるみも、表情筋の衰えが深く関係していることがあります。',hidden:'40代以降の筋力変化は、運動量だけでなくエストロゲンの減少の影響を強く受けます。同じ運動量でも筋肉がつきにくくなるのはこのためで、運動の種類と強度を見直すだけで結果が変わることがあります。',checks:['顔のたるみと体のたるみが同時に進んでいませんか？','有酸素運動だけでなく、筋力トレーニングを取り入れていますか？','体重は変わっていないのに体型が変わった場合、筋肉量の低下が原因の可能性があります'],next:'運動の専門家に相談しながら、年齢に合った筋力維持のアプローチを設計することをお勧めします。'},
+  hormone:{label:'ホルモン起点タイプ',en:'Hormone Type',className:'type-hormone',desc:'髪のボリューム低下・爪の脆さ・皮膚の乾燥・体調の波——これらはエストロゲンの減少と深く関係しています。女性は40歳を過ぎた頃からエストロゲンが減少し始め、肌・骨・筋肉・髪など全身に影響が出ます。外側からのケアだけでは限界があり、内側からの変化を正確に理解した上で美容ケアを設計することが必要なタイプです。',hidden:'エストロゲンは肌のコラーゲン生成・ヘアサイクルの維持・爪の強度にも関与しています。髪・爪・肌の乾燥が同時に進んでいる場合、それぞれを別々に対処するより、ホルモン変化という共通の根本原因として捉え直すと、ケアの全体像が変わります。',checks:['髪・爪・肌の乾燥が同時に進んでいませんか？これはホルモン変化のサインの可能性があります','婦人科でホルモン値を確認したことがありますか？','外側のケアと内側からのアプローチを組み合わせると効果が高まります'],next:'婦人科・内科でのホルモン確認を起点に、外側のケアと合わせた総合的な設計を考えましょう。'}
+};
+let scores={structure:0,skin:0,muscle:0,hormone:0};
+let currentQ=0,answers=new Array(TOTAL_Q).fill(null);
+function startQuiz(){document.getElementById('hero').style.display='none';document.getElementById('quiz').classList.add('active');updateProgress()}
+function selectOption(el){el.closest('.question-wrap').querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');answers[currentQ]=JSON.parse(el.dataset.scores);const nb=document.getElementById('nextBtn');nb.classList.add('enabled');nb.textContent=currentQ===TOTAL_Q-1?'結果を見る':'次へ'}
+function updateProgress(){document.getElementById('progressFill').style.width=(currentQ/TOTAL_Q*100)+'%';document.getElementById('progressText').textContent=(currentQ+1)+' / '+TOTAL_Q;document.getElementById('backBtn').style.visibility=currentQ>0?'visible':'hidden';const nb=document.getElementById('nextBtn');nb.textContent=currentQ===TOTAL_Q-1?'結果を見る':'次へ';nb.classList.toggle('enabled',answers[currentQ]!==null)}
+function nextQuestion(){if(!answers[currentQ])return;Object.entries(answers[currentQ]).forEach(([k,v])=>scores[k]+=v);if(currentQ<TOTAL_Q-1){document.querySelectorAll('.question-wrap')[currentQ].classList.remove('active');currentQ++;document.querySelectorAll('.question-wrap')[currentQ].classList.add('active');window.scrollTo(0,0);updateProgress()}else{showResult()}}
+function prevQuestion(){if(currentQ>0){if(answers[currentQ])Object.entries(answers[currentQ]).forEach(([k,v])=>scores[k]-=v);document.querySelectorAll('.question-wrap')[currentQ].classList.remove('active');currentQ--;document.querySelectorAll('.question-wrap')[currentQ].classList.add('active');window.scrollTo(0,0);updateProgress()}}
+function showResult(){document.getElementById('quiz').classList.remove('active');const topType=Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];const t=types[topType];const shareText='私は「'+t.label+'（'+t.en+'）」でした。\n\n'+SHARE_TAG;document.getElementById('resultInner').innerHTML='<div class="'+t.className+'"><div class="result-eyebrow">Your Beauty Origin Type</div><div class="result-type-label">'+t.label+'</div><div class="result-type-en">'+t.en+'</div><div class="result-card"><p class="result-desc">'+t.desc+'</p><div class="result-hidden-insight"><div class="rhi-label">他では言ってもらえない視点</div><p class="rhi-text">'+t.hidden+'</p></div><div class="result-check"><div class="result-check-label">今日から確認できること</div>'+t.checks.map(c=>'<div class="check-item"><div class="check-dot"></div><span>'+c+'</span></div>').join('')+'</div></div><div class="result-next"><p class="result-next-title">あなただけの「次の一手」を<br>一緒に考えませんか。</p><p class="result-next-text">タイプ診断はあくまで起点です。あなたの生活習慣・予算・居住地・今受けているサービスを踏まえた、本当に継続できる個別の提案をお届けします。</p><div class="form-group"><input type="email" class="form-input" placeholder="メールアドレスを入力" id="emailInput"><button class="btn-register" onclick="register()">個別診断を受ける</button></div></div><div class="result-share"><div class="share-label">診断結果をシェアする</div><div class="share-text" id="shareText">'+shareText+'</div><button class="btn-copy" onclick="copyShare()">コピーする</button></div></div>';document.getElementById('result').classList.add('active');window.scrollTo(0,0)}
+function register(){const email=document.getElementById('emailInput').value;if(!email||!email.includes('@')){document.getElementById('emailInput').style.borderColor='#A84545';return}document.getElementById('result').classList.remove('active');document.getElementById('registered').classList.add('active');window.scrollTo(0,0)}
+function copyShare(){navigator.clipboard.writeText(document.getElementById('shareText').textContent).then(()=>{const btn=document.querySelector('.btn-copy');btn.textContent='コピーしました ✓';setTimeout(()=>btn.textContent='コピーする',2000)})}
+</script>
+</body>
+</html>
